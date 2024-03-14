@@ -1,9 +1,9 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs/promises");
-const fetch = require("node-fetch");
-
+const CommitToGitHub = require('./CommitToGithub.js');
+let browser; // Declare browser globally
 async function scrollUntilElementVisible(url, selector) {
-  const browser = await puppeteer.launch({
+  browser = await puppeteer.launch({
     headless: `new`,
     defaultViewport: null,
     args: ["--start-maximized"],
@@ -131,85 +131,13 @@ async function scrapeElementValues(page, startChildIndex, endChildIndex) {
   }
 }
 
-async function pushFilesToGitHub(files, repository, branch, githubToken) {
-  try {
-    const baseUrl = "https://api.github.com";
-    const url = `${baseUrl}/repos/${repository}/git/trees/${branch}`;
-
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        Authorization: `token ${githubToken}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    const data = await response.json();
-    const sha = data.sha;
-
-    const tree = files.map((file) => ({
-      path: file.path,
-      mode: "100644",
-      type: "blob",
-      content: file.content,
-    }));
-
-    const treeData = {
-      base_tree: sha,
-      tree: tree,
-    };
-
-    const createTreeResponse = await fetch(`${baseUrl}/repos/${repository}/git/trees`, {
-      method: "POST",
-      headers: {
-        Authorization: `token ${githubToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(treeData),
-    });
-
-    const createTreeResult = await createTreeResponse.json();
-
-    const commitData = {
-      message: "Automatically generated commit",
-      tree: createTreeResult.sha,
-      parents: [sha],
-    };
-
-    const createCommitResponse = await fetch(`${baseUrl}/repos/${repository}/git/commits`, {
-      method: "POST",
-      headers: {
-        Authorization: `token ${githubToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(commitData),
-    });
-
-    const createCommitResult = await createCommitResponse.json();
-
-    await fetch(`${baseUrl}/repos/${repository}/git/refs/heads/${branch}`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `token ${githubToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        sha: createCommitResult.sha,
-        force: true,
-      }),
-    });
-  } catch (error) {
-    console.error("Error while pushing files to GitHub:", error);
-  }
-}
-
 async function runScript() {
   const url = "https://amaribot.com/leaderboard/835294705074962472";
-  const targetElementXPath =
-    "/html/body/div/div/div[12]/div[3]/div/div[1000]/div[2]"; // Update with the correct XPath
   const startIndex = 1;
-  const endIndex = 1000;
-  const batchSize = 100;
+  const endIndex = 100;
+  const batchSize = 1000;
+  const targetElementXPath =
+    `/html/body/div/div/div[12]/div[3]/div/div[${endIndex}]/div[2]`; // Update with the correct XPath
   const page = await scrollUntilElementVisible(url, targetElementXPath);
   for (let start = startIndex; start <= endIndex; start += batchSize) {
     const end = Math.min(start + batchSize - 1, endIndex);
@@ -225,10 +153,11 @@ async function runScript() {
       // Write the JSON object to a file
       const outputFile = `${start}-${end}.json`;
       await fs.writeFile(outputFile, JSON.stringify(result, null, 2));
+      //CommitToGitHub.commitFilesToGitHub(outputFile); // Example file path
 
     }
   }
-  await page.close();
+  await browser.close();
 }
 
 // Run the combined script
