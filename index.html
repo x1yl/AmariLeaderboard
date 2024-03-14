@@ -2,25 +2,28 @@
 <html>
 <body>
 
-<h2>Make a table based on JSON data.</h2>
+<h2>Leaderboard</h2>
 
-<p id="demo"></p>
+<div id="table-container"></div>
 
 <script>
-const dbParam = JSON.stringify({table:"lb"});
-const xmlhttp = new XMLHttpRequest();
-xmlhttp.onload = function() {
-  const myObj = JSON.parse(this.responseText);
-  let text = "<table border='1'>"
-  for (let x in myObj) {
-    text += "<tr><td>" + myObj[x].name + "</td></tr>";
-  }
-  text += "</table>"    
-  document.getElementById("demo").innerHTML = text;
-}
-xmlhttp.open("POST", "1-100.json");
-xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-xmlhttp.send("x=" + dbParam);
+fetch('https://x1yl.github.io/json/1-100.json')
+  .then(response => response.json())
+  .then(data => {
+    const leaderboard = data.lb;
+    let tableHtml = '<table border="1"><tr><th>Rank</th><th>User</th><th>XP</th></tr>';
+    
+    leaderboard.forEach(entry => {
+      tableHtml += `<tr><td>${entry.rank}</td><td>${entry.user}</td><td>${entry.xp}</td></tr>`;
+    });
+    
+    tableHtml += '</table>';
+    
+    document.getElementById('table-container').innerHTML = tableHtml;
+  })
+  .catch(error => {
+    console.error('Error fetching leaderboard data:', error);
+  });
 </script>
 
 </body>
