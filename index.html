@@ -1,5 +1,56 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', sans-serif; /* Silly font */
+    }
+    h2 {
+      margin-bottom: 10px;
+    }
+    #buttons-container {
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 8px 16px;
+      font-size: 14px;
+      background-color: #3498db; /* Light Blue */
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #2980b9; /* Darker Blue */
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #f39c12; /* Orange */
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #2a9657; /* Green */
+      color: white;
+    }
+    tr:nth-child(odd) {
+      background-color: #e74c3c; /* Red */
+      color: white;
+    }
+    tr:hover {
+      background-color: #2c3e50; /* Dark Blue */
+      color: white;
+    }
+  </style>
+</head>
 <body>
 
 <h2>Leaderboard</h2>
@@ -13,10 +64,11 @@ function fetchLeaderboard(start, end) {
     .then(response => response.json())
     .then(data => {
       const leaderboard = data.lb;
-      let tableHtml = '<table border="1"><tr><th>Rank</th><th>User</th><th>XP</th></tr>';
+      let tableHtml = '<table><tr><th>Rank</th><th>User</th><th>XP</th></tr>';
       
-      leaderboard.forEach(entry => {
-        tableHtml += `<tr><td>${entry.rank}</td><td>${entry.user}</td><td>${entry.xp}</td></tr>`;
+      leaderboard.forEach((entry, index) => {
+        const rowColor = index % 2 === 0 ? 'even' : 'odd';
+        tableHtml += `<tr class="${rowColor}"><td>${entry.rank}</td><td>${entry.user}</td><td>${entry.xp}</td></tr>`;
       });
       
       tableHtml += '</table>';
@@ -27,7 +79,7 @@ function fetchLeaderboard(start, end) {
       console.error('Error fetching leaderboard data:', error);
     });
 }
-
+fetchLeaderboard(1, 100);
 const buttonsContainer = document.getElementById('buttons-container');
 for (let i = 0; i < 10; i++) {
   const start = i * 100 + 1;
