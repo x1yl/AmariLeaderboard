@@ -4,26 +4,40 @@
 
 <h2>Leaderboard</h2>
 
+<div id="buttons-container"></div>
 <div id="table-container"></div>
 
 <script>
-fetch('https://x1yl.github.io/json/1-100.json')
-  .then(response => response.json())
-  .then(data => {
-    const leaderboard = data.lb;
-    let tableHtml = '<table border="1"><tr><th>Rank</th><th>User</th><th>XP</th></tr>';
-    
-    leaderboard.forEach(entry => {
-      tableHtml += `<tr><td>${entry.rank}</td><td>${entry.user}</td><td>${entry.xp}</td></tr>`;
+function fetchLeaderboard(start, end) {
+  fetch(`https://x1yl.github.io/json/${start}-${end}.json`)
+    .then(response => response.json())
+    .then(data => {
+      const leaderboard = data.lb;
+      let tableHtml = '<table border="1"><tr><th>Rank</th><th>User</th><th>XP</th></tr>';
+      
+      leaderboard.forEach(entry => {
+        tableHtml += `<tr><td>${entry.rank}</td><td>${entry.user}</td><td>${entry.xp}</td></tr>`;
+      });
+      
+      tableHtml += '</table>';
+      
+      document.getElementById('table-container').innerHTML = tableHtml;
+    })
+    .catch(error => {
+      console.error('Error fetching leaderboard data:', error);
     });
-    
-    tableHtml += '</table>';
-    
-    document.getElementById('table-container').innerHTML = tableHtml;
-  })
-  .catch(error => {
-    console.error('Error fetching leaderboard data:', error);
-  });
+}
+
+const buttonsContainer = document.getElementById('buttons-container');
+for (let i = 0; i < 10; i++) {
+  const start = i * 100 + 1;
+  const end = (i + 1) * 100;
+  const button = document.createElement('button');
+  button.textContent = `${start}-${end}`;
+  button.addEventListener('click', () => fetchLeaderboard(start, end));
+  buttonsContainer.appendChild(button);
+  buttonsContainer.appendChild(document.createTextNode(' '));
+}
 </script>
 
 </body>
