@@ -1,7 +1,7 @@
 // app.js
 const express = require("express");
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 const compression = require("compression");
 const helmet = require("helmet");
 
