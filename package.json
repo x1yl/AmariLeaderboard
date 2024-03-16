@@ -1,23 +1,28 @@
 {
-  "name": "grades",
+  "name": "guild-leaderboard",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=21.7.1"
+  },
   "description": "",
-  "main": "main.js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./",
+    "dev": "nodemon ./"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@octokit/core": "^6.0.1",
-    "@octokit/rest": "^20.0.2",
-    "discord.js": "^14.14.1",
-    "node-fetch": "^3.3.2",
-    "package.json": "^2.0.1",
-    "puppeteer": "^22.3.0",
-    "puppeteer-extra": "^3.3.6",
-    "puppeteer-extra-plugin-stealth": "^2.11.2",
-    "puppeteer-repo": "github:GoogleChrome/puppeteer"
+    "amaribot.js": "^2.1.0",
+    "compression": "^1.7.4",
+    "express": "^4.18.3",
+    "express-rate-limit": "^7.2.0",
+    "express-session": "^1.18.0",
+    "helmet": "^7.1.0",
+    "redis": "^4.6.13"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
   }
 }
