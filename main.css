@@ -1,4 +1,4 @@
-/* style.css */
+/* main.css */
 
 body {
     font-family: 'Roboto', sans-serif; /* Roboto font */
@@ -6,12 +6,16 @@ body {
     color: #fff; /* White text color */
     margin: 0;
     padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Make the body take up the full viewport height */
 }
 
 .container {
-    max-width: 800px;
-    margin: 20px auto;
+    width: 30%; /* 70% of the viewport width */
     padding: 20px;
+    padding-bottom: 45px;
     background-color: #2c3e50; /* Darker blue container background */
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -23,35 +27,25 @@ h1 {
     font-size: 24px; /* Increase font size */
 }
 
-ol {
-    padding: 0;
-    list-style-position: inside; /* Ensures list numbers are inside the <li> box */
-}
-
-li {
-    margin-bottom: 10px;
-    padding: 10px;
-    background-color: #34495e; /* Dark blue background */
-    color: #fff; /* White text color */
-    border-radius: 4px;
-}
-
 p {
     color: #ccc; /* Light gray text color */
     text-align: center; /* Center-align the paragraphs */
-}
-input[type="text"] {
-    padding: 10px;
-    width: 20%; /* Full width */
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff; /* White background */
-    color: #333; /* Text color */
-    margin-bottom: 15px; /* Add space between input field and button */
+    margin-bottom: 15px; /* Add space between paragraphs */
 }
 
-/* Button */
-button {
+form {
+    margin-top: 20px;
+    text-align: center; /* Center-align the form */
+}
+
+input[type="text"] {
+    padding: 10px;
+    width: 40%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button[type="submit"] {
     padding: 10px 20px;
     background-color: #e74c3c; /* Red button color */
     color: #fff;
