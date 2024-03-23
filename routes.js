@@ -19,7 +19,6 @@ async function getGuildLeaderboardData(server) {
 app.get("/", async (req, res) => {
   try {
     const server = req.query.server || process.env.server; // Use provided server or default
-    console.log(server)
     if (server !== process.env.server) {
       let start = 0;
       let end = 50;
